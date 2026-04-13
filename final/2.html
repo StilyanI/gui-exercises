@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="bg">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>2</title>
+        <style>
+            body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 24px;
+            background: #f5f5f5;
+            }
+
+            .todo-app {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 12px;
+            }
+
+            .input-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            }
+
+            #todo-input {
+            flex: 1;
+            padding: 10px 12px;
+            }
+
+            button {
+            padding: 10px 14px;
+            cursor: pointer;
+            }
+
+            .filters {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0;
+            }
+
+            #error {
+            min-height: 20px;
+            color: #d93025;
+            margin: 0 0 12px;
+            }
+
+            #counter {
+            margin: 0 0 12px;
+            }
+
+            #todo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            }
+
+            .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #dddddd;
+            }
+
+            .todo-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            }
+
+            .completed .todo-text {
+            text-decoration: line-through;
+            color: #888888;
+            }
+
+            .delete-btn {
+            border: none;
+            background: #ff5241;
+            color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="todo-app">
+            <div class="input-row">
+            <input id="todo-input" type="text" placeholder="Въведете нова задача">
+            <button id="add-btn" type="button">Добави</button>
+            </div>
+
+            <p id="error"></p>
+
+            <div class="filters">
+            <button class="filter-btn" data-filter="all" type="button">Всички</button>
+            <button class="filter-btn" data-filter="active" type="button">Активни</button>
+            <button class="filter-btn" data-filter="completed" type="button">Завършени</button>
+            </div>
+
+            <p id="counter"></p>
+            <ul id="todo-list"></ul>
+        </div>
+
+        <script>
+            function loadTodos() {
+                const saved = localStorage.getItem("todos");
+                return saved ? JSON.parse(saved) : [];
+            }
+
+            function saveTodos(todos) {
+                localStorage.setItem("todos", JSON.stringify(todos));
+            }
+
+            let todos = loadTodos();
+            let filter = "all";
+
+            function renderTodos() {
+                const list = document.querySelector("#todo-list");
+                list.innerHTML = "";
+
+                const filtered = todos.filter(todo => {
+                    if (filter === "active") return !todo.completed;
+                    if (filter === "completed") return todo.completed;
+                    return true;
+                });
+
+                filtered.forEach(todo => {
+                    const li = document.createElement("li");
+                    li.className = todo.completed ? "todo-item completed" : "todo-item";
+                    li.dataset.id = todo.id;
+
+                    const content = document.createElement("div");
+                    content.className = "todo-content";
+
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.checked = todo.completed;
+
+                    const text = document.createElement("span");
+                    text.className = "todo-text";
+                    text.textContent = todo.text;
+
+                    const button = document.createElement("button");
+                    button.className = "delete-btn";
+                    button.type = "button";
+                    button.textContent = "X";
+
+                    content.appendChild(checkbox);
+                    content.appendChild(text);
+                    li.appendChild(content);
+                    li.appendChild(button);
+                    list.appendChild(li);
+                });
+
+                const done = todos.filter(t => t.completed).length;
+                document.querySelector("#counter").textContent =
+                    done + " от " + todos.length + " задачи завършени";
+            }
+
+            document.querySelector("#todo-list").addEventListener("click", (e) => {
+                const li = e.target.closest(".todo-item");
+                if (!li) return;
+                const id = Number(li.dataset.id);
+
+                if (e.target.type === "checkbox") {
+                    todos = todos.map(t =>
+                    t.id === id ? { ...t, completed: !t.completed } : t
+                    );
+                    saveTodos(todos);
+                    renderTodos();
+                }
+
+                if (e.target.classList.contains("delete-btn")) {
+                    todos = todos.filter(t => t.id !== id);
+                    saveTodos(todos);
+                    renderTodos();
+                }
+            });
+
+            function addTodo() {
+                const input = document.querySelector("#todo-input");
+                const text = input.value.trim();
+
+                if (!text) {
+                    document.querySelector("#error").textContent = "Въведете задача!";
+                    return;
+                }
+
+                document.querySelector("#error").textContent = "";
+                todos.push({ id: Date.now(), text, completed: false });
+                saveTodos(todos);
+                input.value = "";
+                renderTodos();
+            }
+
+            document.querySelector("#add-btn").addEventListener("click", addTodo);
+
+            document.querySelector("#todo-input").addEventListener("keydown", (e) => {
+                if (e.key === "Enter") addTodo();
+            });
+
+            document.querySelectorAll(".filter-btn").forEach(button => {
+                button.addEventListener("click", () => {
+                    filter = button.dataset.filter;
+                    renderTodos();
+                });
+            });
+
+            renderTodos();
+        </script>
+    </body>
+</html>
