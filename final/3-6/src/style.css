@@ -132,7 +132,6 @@ select {
 
 .status-card h3,
 .course-card h3,
-.panel h2,
 .panel h3,
 .task-card h4 {
   margin: 0;
@@ -321,6 +320,195 @@ select {
   border: 1px solid var(--border);
 }
 
+.classroom-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.classroom-page {
+  --classroom-card-bg: var(--card-bg);
+  --classroom-border: var(--border);
+  --classroom-hover-bg: var(--hover-bg);
+  --classroom-tag-bg: var(--tag-bg);
+  --classroom-text-primary: var(--text-primary);
+  --classroom-text-secondary: var(--text-secondary);
+  border-radius: 28px;
+  padding: 20px;
+  background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%);
+  border: 1px solid rgba(79, 70, 229, 0.12);
+}
+
+.classroom-page--dark {
+  --classroom-card-bg: #1f2937;
+  --classroom-border: rgba(255, 255, 255, 0.12);
+  --classroom-hover-bg: #111827;
+  --classroom-tag-bg: rgba(255, 255, 255, 0.12);
+  --classroom-text-primary: #f9fafb;
+  --classroom-text-secondary: #cbd5e1;
+  background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
+  border-color: rgba(129, 140, 248, 0.16);
+}
+
+.classroom-page .panel,
+.classroom-page .classroom-row,
+.classroom-page input,
+.classroom-page select {
+  background: var(--classroom-card-bg);
+  border-color: var(--classroom-border);
+  color: var(--classroom-text-primary);
+}
+
+.classroom-page .classroom-row {
+  background: var(--classroom-hover-bg);
+}
+
+.classroom-page .classroom-stat-label,
+.classroom-page .classroom-grade-group span,
+.classroom-page .empty-text,
+.classroom-page .info-message {
+  color: var(--classroom-text-secondary);
+}
+
+.classroom-page .grade-badge {
+  background: var(--classroom-tag-bg);
+  color: var(--classroom-text-primary);
+}
+
+.classroom-page .classroom-stat-value,
+.classroom-page .classroom-grade-group strong,
+.classroom-page .classroom-row span,
+.classroom-page .classroom-row strong {
+  color: var(--classroom-text-primary);
+}
+
+.classroom-actions input {
+  flex: 1;
+}
+
+.classroom-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+}
+
+.classroom-table-wrap {
+  min-width: 0;
+}
+
+.classroom-stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.classroom-stat-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.classroom-stat-value {
+  font-size: 2.2rem;
+  color: var(--text-primary);
+}
+
+.classroom-stat-value--small {
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.classroom-table {
+  display: grid;
+  gap: 12px;
+}
+
+.classroom-row {
+  display: grid;
+  grid-template-columns: 1.1fr 0.7fr 1.6fr 0.7fr;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--hover-bg);
+  color: var(--text-primary);
+  grid-template-areas:
+    "name class grades average"
+    "actions actions actions actions";
+}
+
+.classroom-row__name {
+  grid-area: name;
+}
+
+.classroom-row__class {
+  grid-area: class;
+}
+
+.classroom-row__grades {
+  grid-area: grades;
+}
+
+.classroom-row__average {
+  grid-area: average;
+}
+
+.classroom-row__actions {
+  grid-area: actions;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.classroom-grades {
+  display: grid;
+  gap: 8px;
+}
+
+.classroom-grade-group {
+  display: grid;
+  gap: 2px;
+}
+
+.classroom-grade-group strong,
+.classroom-grade-group span,
+.classroom-row span,
+.classroom-row strong {
+  color: inherit;
+}
+
+.classroom-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.grade-badge {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: var(--tag-bg);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.grade-badge--high {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.grade-badge--low {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.classroom-error {
+  margin: 0;
+  color: #dc2626;
+}
+
 @media (max-width: 1100px) {
   .course-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -328,6 +516,11 @@ select {
 
   .stats-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .classroom-grid,
+  .classroom-stats {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -352,7 +545,23 @@ select {
 
   .course-list,
   .stats-grid,
-  .stats-grid--dashboard {
+  .stats-grid--dashboard,
+  .classroom-grid,
+  .classroom-stats {
     grid-template-columns: 1fr;
+  }
+
+  .classroom-actions,
+  .classroom-row {
+    grid-template-columns: 1fr;
+  }
+
+  .classroom-row {
+    display: grid;
+    gap: 10px;
+  }
+
+  .classroom-toolbar {
+    justify-content: flex-start;
   }
 }
