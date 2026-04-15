@@ -14,9 +14,7 @@ function CourseCard({ course }) {
         </span>
       </div>
       <p>{course.category}</p>
-      <p>{"★".repeat(Math.round(course.rating))}</p>
       {course.rating >= 4.5 && <span className="top-rated">Top Rated</span>}
-      <p>Рейтинг: {course.rating.toFixed(1)}</p>
       <p>{course.students} студенти</p>
     </div>
   );
